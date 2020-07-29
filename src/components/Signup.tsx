@@ -9,11 +9,18 @@ interface SignupState {
   emailAddress: string;
   password: string;
   confirmPassword: string;
+  errorMessage: string;
 }
 
 interface SignupProps {
   history: History;
 }
+
+const errorStyle = {
+  color: 'red',
+  marginBottom: '10px',
+  display: 'block',
+};
 
 export class Signup extends Component<SignupProps, SignupState> {
   constructor(props: SignupProps) {
@@ -25,6 +32,7 @@ export class Signup extends Component<SignupProps, SignupState> {
       emailAddress: '',
       password: '',
       confirmPassword: '',
+      errorMessage: '',
     };
   }
 
@@ -51,7 +59,10 @@ export class Signup extends Component<SignupProps, SignupState> {
     } = this.state;
 
     if (password !== confirmPassword) {
-      alert('Password does not match');
+      this.setState((prevState) => ({
+        ...prevState,
+        errorMessage: 'Password does not match',
+      }));
       return;
     }
 
@@ -65,9 +76,21 @@ export class Signup extends Component<SignupProps, SignupState> {
         displayName: `${firstName} ${lastName}`,
       });
 
+      this.setState({
+        firstName: '',
+        lastName: '',
+        emailAddress: '',
+        password: '',
+        confirmPassword: '',
+        errorMessage: '',
+      });
+
       this.props.history.push('/');
     } catch (error) {
-      console.log(error);
+      this.setState((prevState) => ({
+        ...prevState,
+        errorMessage: error.message,
+      }));
     }
   };
   render() {
@@ -77,6 +100,7 @@ export class Signup extends Component<SignupProps, SignupState> {
       emailAddress,
       password,
       confirmPassword,
+      errorMessage,
     } = this.state;
 
     return (
@@ -84,6 +108,9 @@ export class Signup extends Component<SignupProps, SignupState> {
         <div className="grid-33 centered signin">
           <h1>Sign Up</h1>
           <div>
+            {errorMessage ? (
+              <span style={errorStyle}>{errorMessage}</span>
+            ) : null}
             <form onSubmit={this.handleSubmit}>
               <div>
                 <input

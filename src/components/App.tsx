@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import { Home } from './Home';
 import { Signup } from './Signup';
@@ -9,28 +10,21 @@ import { UpdateCourse } from './course/UpdateCourse';
 import { CourseDetail } from './course/CourseDetail';
 import { NotFound } from './NotFound';
 import { auth, createUserProfileDocument } from '../firebase/firebase.utils';
+import { setCurrentUser, User } from '../actions';
+import { StoreState } from '../reducers';
 
-interface AppProps {}
-
-interface AppState {
-  currentUser: {
-    displayName?: string;
-    id: string;
-    email?: string;
-  } | null;
+interface AppProps {
+  currentUser: User;
+  setCurrentUser: typeof setCurrentUser;
 }
 
-export class App extends React.Component<AppProps, AppState> {
+class _App extends React.Component<AppProps> {
   unsubscribeFromAuth: any;
 
   constructor(props: AppProps) {
     super(props);
 
     this.unsubscribeFromAuth = null;
-
-    this.state = {
-      currentUser: null,
-    };
   }
 
   componentDidMount(): void {
@@ -39,15 +33,15 @@ export class App extends React.Component<AppProps, AppState> {
         const userRef = await createUserProfileDocument(user);
 
         userRef?.onSnapshot((snapshot) => {
-          this.setState({
-            currentUser: {
-              id: snapshot.id,
-              ...snapshot.data(),
-            },
+          const data = snapshot.data();
+          this.props.setCurrentUser({
+            id: snapshot.id,
+            displayName: data?.displayName,
+            email: data?.email,
           });
         });
       }
-      this.setState({ currentUser: null });
+      this.props.setCurrentUser(null);
     });
   }
 
@@ -56,9 +50,11 @@ export class App extends React.Component<AppProps, AppState> {
   }
 
   render() {
+    console.log(this.props.currentUser);
+
     return (
       <div>
-        <Header currentUser={this.state.currentUser} />
+        <Header currentUser={this.props.currentUser} />
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/sign-in" component={Signin} />
@@ -72,3 +68,9 @@ export class App extends React.Component<AppProps, AppState> {
     );
   }
 }
+
+const mapStateToProps = (state: StoreState): { currentUser: User } => ({
+  currentUser: state.user,
+});
+
+export const App = connect(mapStateToProps, { setCurrentUser })(_App);

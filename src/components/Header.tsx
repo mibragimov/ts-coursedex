@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { auth } from '../firebase/firebase.utils';
+import { User } from '../actions';
 
 interface HeaderProps {
-  currentUser: {
-    id: string;
-  } | null;
+  currentUser: User;
 }
 
 export const Header = (props: HeaderProps): JSX.Element => {
@@ -16,7 +15,7 @@ export const Header = (props: HeaderProps): JSX.Element => {
           <h1 className="header--logo">Courses</h1>
           <nav>
             {props.currentUser ? (
-              <span>`Welcome ${props.currentUser.id}`</span>
+              <span>Welcome {props.currentUser.displayName}</span>
             ) : (
               <Link className="signup" to="/sign-up">
                 Sign Up
