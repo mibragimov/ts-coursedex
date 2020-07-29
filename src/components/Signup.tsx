@@ -1,14 +1,90 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { History } from 'history';
+import { auth, createUserProfileDocument } from '../firebase/firebase.utils';
 
-export class Signup extends Component {
+interface SignupState {
+  firstName: string;
+  lastName: string;
+  emailAddress: string;
+  password: string;
+  confirmPassword: string;
+}
+
+interface SignupProps {
+  history: History;
+}
+
+export class Signup extends Component<SignupProps, SignupState> {
+  constructor(props: SignupProps) {
+    super(props);
+
+    this.state = {
+      firstName: '',
+      lastName: '',
+      emailAddress: '',
+      password: '',
+      confirmPassword: '',
+    };
+  }
+
+  handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = event.target;
+
+    this.setState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    event.preventDefault();
+
+    const {
+      firstName,
+      lastName,
+      emailAddress,
+      password,
+      confirmPassword,
+    } = this.state;
+
+    if (password !== confirmPassword) {
+      alert('Password does not match');
+      return;
+    }
+
+    try {
+      const { user } = await auth.createUserWithEmailAndPassword(
+        emailAddress,
+        password
+      );
+
+      await createUserProfileDocument(user, {
+        displayName: `${firstName} ${lastName}`,
+      });
+
+      this.props.history.push('/');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   render() {
+    const {
+      firstName,
+      lastName,
+      emailAddress,
+      password,
+      confirmPassword,
+    } = this.state;
+
     return (
       <div className="bounds">
         <div className="grid-33 centered signin">
           <h1>Sign Up</h1>
           <div>
-            <form>
+            <form onSubmit={this.handleSubmit}>
               <div>
                 <input
                   id="firstName"
@@ -16,7 +92,8 @@ export class Signup extends Component {
                   type="text"
                   className=""
                   placeholder="First Name"
-                  value=""
+                  value={firstName}
+                  onChange={this.handleChange}
                 />
               </div>
               <div>
@@ -26,17 +103,19 @@ export class Signup extends Component {
                   type="text"
                   className=""
                   placeholder="Last Name"
-                  value=""
+                  value={lastName}
+                  onChange={this.handleChange}
                 />
               </div>
               <div>
                 <input
                   id="emailAddress"
                   name="emailAddress"
-                  type="text"
+                  type="email"
                   className=""
                   placeholder="Email Address"
-                  value=""
+                  value={emailAddress}
+                  onChange={this.handleChange}
                 />
               </div>
               <div>
@@ -46,7 +125,8 @@ export class Signup extends Component {
                   type="password"
                   className=""
                   placeholder="Password"
-                  value=""
+                  value={password}
+                  onChange={this.handleChange}
                 />
               </div>
               <div>
@@ -56,7 +136,8 @@ export class Signup extends Component {
                   type="password"
                   className=""
                   placeholder="Confirm Password"
-                  value=""
+                  value={confirmPassword}
+                  onChange={this.handleChange}
                 />
               </div>
               <div className="grid-100 pad-bottom">

@@ -1,13 +1,34 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { History } from 'history';
+import { auth } from '../firebase/firebase.utils';
 
-export function Signin() {
+interface SigninProps {
+  history: History;
+}
+
+export const Signin = (props: SigninProps): JSX.Element => {
+  const [emailAddress, setEmailAddress] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    event.preventDefault();
+    try {
+      await auth.signInWithEmailAndPassword(emailAddress, password);
+      props.history.push('/');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="bounds">
       <div className="grid-33 centered signin">
         <h1>Sign In</h1>
         <div>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div>
               <input
                 id="emailAddress"
@@ -15,7 +36,8 @@ export function Signin() {
                 type="text"
                 className=""
                 placeholder="Email Address"
-                value=""
+                value={emailAddress}
+                onChange={(e) => setEmailAddress(e.target.value)}
               />
             </div>
             <div>
@@ -25,7 +47,8 @@ export function Signin() {
                 type="password"
                 className=""
                 placeholder="Password"
-                value=""
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             <div className="grid-100 pad-bottom">
@@ -44,4 +67,4 @@ export function Signin() {
       </div>
     </div>
   );
-}
+};
