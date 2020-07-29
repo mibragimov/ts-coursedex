@@ -121,6 +121,7 @@ export class Signup extends Component<SignupProps, SignupState> {
                   placeholder="First Name"
                   value={firstName}
                   onChange={this.handleChange}
+                  required
                 />
               </div>
               <div>
@@ -132,6 +133,7 @@ export class Signup extends Component<SignupProps, SignupState> {
                   placeholder="Last Name"
                   value={lastName}
                   onChange={this.handleChange}
+                  required
                 />
               </div>
               <div>
@@ -143,6 +145,7 @@ export class Signup extends Component<SignupProps, SignupState> {
                   placeholder="Email Address"
                   value={emailAddress}
                   onChange={this.handleChange}
+                  required
                 />
               </div>
               <div>
@@ -154,6 +157,7 @@ export class Signup extends Component<SignupProps, SignupState> {
                   placeholder="Password"
                   value={password}
                   onChange={this.handleChange}
+                  required
                 />
               </div>
               <div>
@@ -165,6 +169,7 @@ export class Signup extends Component<SignupProps, SignupState> {
                   placeholder="Confirm Password"
                   value={confirmPassword}
                   onChange={this.handleChange}
+                  required
                 />
               </div>
               <div className="grid-100 pad-bottom">
