@@ -7,9 +7,16 @@ interface SigninProps {
   history: History;
 }
 
+const errorStyle = {
+  color: 'red',
+  marginBottom: '10px',
+  display: 'block',
+};
+
 export const Signin = (props: SigninProps): JSX.Element => {
   const [emailAddress, setEmailAddress] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
@@ -17,9 +24,12 @@ export const Signin = (props: SigninProps): JSX.Element => {
     event.preventDefault();
     try {
       await auth.signInWithEmailAndPassword(emailAddress, password);
+      setEmailAddress('');
+      setPassword('');
+      setErrorMessage('');
       props.history.push('/');
     } catch (error) {
-      console.log(error);
+      setErrorMessage(error.message);
     }
   };
 
@@ -28,6 +38,7 @@ export const Signin = (props: SigninProps): JSX.Element => {
       <div className="grid-33 centered signin">
         <h1>Sign In</h1>
         <div>
+          {errorMessage ? <span style={errorStyle}>{errorMessage}</span> : null}
           <form onSubmit={handleSubmit}>
             <div>
               <input
@@ -38,6 +49,7 @@ export const Signin = (props: SigninProps): JSX.Element => {
                 placeholder="Email Address"
                 value={emailAddress}
                 onChange={(e) => setEmailAddress(e.target.value)}
+                required
               />
             </div>
             <div>
@@ -49,6 +61,7 @@ export const Signin = (props: SigninProps): JSX.Element => {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
             </div>
             <div className="grid-100 pad-bottom">
