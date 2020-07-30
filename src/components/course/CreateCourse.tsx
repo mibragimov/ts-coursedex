@@ -26,7 +26,10 @@ const _CreateCourse = (props: CreateCourseProps): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<Inputs>();
 
   const onSubmit = async (data: Inputs) => {
-    await props.setDocument(data);
+    await props.setDocument({
+      ...data,
+      displayName: props.currentUserName,
+    });
 
     props.history.push('/');
   };

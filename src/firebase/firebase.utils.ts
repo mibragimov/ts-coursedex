@@ -71,5 +71,17 @@ export const readDocumentsFromCollection = async () => {
   }
 };
 
+export const readDocumentById = async (id: string) => {
+  const documentRef = firestore.collection('courses').doc(id);
+  const documentSnapshot = await documentRef.get();
+
+  try {
+    if (documentSnapshot.exists) {
+      return documentSnapshot.data();
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();

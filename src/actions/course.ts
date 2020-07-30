@@ -3,12 +3,15 @@ import { Dispatch } from 'redux';
 import {
   addDocumentToCollection,
   readDocumentsFromCollection,
+  readDocumentById,
 } from '../firebase/firebase.utils';
 
 export interface Course {
   creating: boolean;
   createError: string | null;
   courses: CourseDetails[];
+  selectedCourse: CourseDetails | {};
+  loadingSelectedCourse: boolean;
   loadingDocs: boolean;
   loadingDocsError: string | null;
 }
@@ -19,6 +22,7 @@ export interface CourseDetails {
   description: string;
   estimatedTime: string;
   materialsNeeded: string;
+  displayName: string;
 }
 
 // Set Documents
@@ -91,6 +95,44 @@ export const readDocuments = () => {
       dispatch(readDocsSuccess(data));
     } catch (error) {
       dispatch(readDocsFailure(error.message));
+    }
+  };
+};
+
+// Read a single document
+
+export interface ReadDocStart {
+  type: ActionTypes.readDocumentStart;
+}
+export interface ReadDocSuccess {
+  type: ActionTypes.readDocumentSuccess;
+  payload: any;
+}
+export interface ReadDocFailure {
+  type: ActionTypes.readDocumentFailure;
+  payload: string;
+}
+
+const readDocStart = (): ReadDocStart => ({
+  type: ActionTypes.readDocumentStart,
+});
+const readDocSuccess = (data: any): ReadDocSuccess => ({
+  type: ActionTypes.readDocumentSuccess,
+  payload: data,
+});
+const readDocFailure = (err: string): ReadDocFailure => ({
+  type: ActionTypes.readDocumentFailure,
+  payload: err,
+});
+
+export const readDocument = (id: string) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch(readDocStart());
+      const data = await readDocumentById(id);
+      dispatch(readDocSuccess(data));
+    } catch (error) {
+      dispatch(readDocFailure(error.message));
     }
   };
 };

@@ -4,6 +4,8 @@ const INITIAL_STATE = {
   creating: false,
   createError: null,
   courses: [],
+  selectedCourse: {},
+  loadingSelectedCourse: false,
   loadingDocs: false,
   loadingDocsError: null,
 };
@@ -45,6 +47,22 @@ export const courseReducer = (
         ...state,
         loadingDocs: false,
         loadingDocsError: action.payload,
+      };
+    case ActionTypes.readDocumentStart:
+      return {
+        ...state,
+        loadingSelectedCourse: true,
+      };
+    case ActionTypes.readDocumentSuccess:
+      return {
+        ...state,
+        selectedCourse: action.payload,
+        loadingSelectedCourse: false,
+      };
+    case ActionTypes.readDocumentFailure:
+      return {
+        ...state,
+        loadingSelectedCourse: false,
       };
     default:
       return state;

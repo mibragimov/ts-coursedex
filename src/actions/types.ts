@@ -6,6 +6,9 @@ import {
   ReadDocsStart,
   ReadDocsSuccess,
   ReadDocsFailure,
+  ReadDocStart,
+  ReadDocFailure,
+  ReadDocSuccess,
 } from './course';
 
 export enum ActionTypes {
@@ -16,6 +19,9 @@ export enum ActionTypes {
   readDocumentsStart,
   readDocumentsSuccess,
   readDocumentsFailure,
+  readDocumentStart,
+  readDocumentSuccess,
+  readDocumentFailure,
 }
 
 export type Action =
@@ -25,4 +31,7 @@ export type Action =
   | SetDocumentFailureAction
   | ReadDocsStart
   | ReadDocsSuccess
-  | ReadDocsFailure;
+  | ReadDocsFailure
+  | ReadDocStart
+  | ReadDocFailure
+  | ReadDocSuccess;

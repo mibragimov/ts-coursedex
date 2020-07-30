@@ -59,7 +59,7 @@ class _App extends React.Component<AppProps> {
         <Route path="/" exact component={Home} />
         <Route path="/create-course" component={CreateCourse} />
         <Route path="/update-course" component={UpdateCourse} />
-        <Route path="/course-detail" component={CourseDetail} />
+        <Route path="/course-detail/:id" component={CourseDetail} />
         <Route component={NotFound} />
       </Switch>
     );
