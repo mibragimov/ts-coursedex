@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 import { BrowserRouter } from 'react-router-dom';
 import { App } from './components/App';
 import { reducers } from './reducers';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import './index.css';
 
 const store = createStore(reducers, {}, applyMiddleware(thunk));

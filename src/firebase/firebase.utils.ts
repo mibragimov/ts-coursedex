@@ -46,8 +46,29 @@ export const createUserProfileDocument = async (
 export const addDocumentToCollection = async (data: {}) => {
   const collectionRef = firestore.collection('courses');
 
-  const res = await collectionRef.doc().set(data);
-  console.log(res);
+  try {
+    await collectionRef.doc().set(data);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const readDocumentsFromCollection = async () => {
+  const collectionRef = firestore.collection('courses');
+  const snapshot = await collectionRef.get();
+  let collectionArr: {}[] = [];
+  try {
+    snapshot.forEach((doc) => {
+      collectionArr.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+
+    return collectionArr;
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 export const auth = firebase.auth();
