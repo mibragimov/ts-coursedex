@@ -43,5 +43,12 @@ export const createUserProfileDocument = async (
   return userRef;
 };
 
+export const addDocumentToCollection = async (data: {}) => {
+  const collectionRef = firestore.collection('courses');
+
+  const res = await collectionRef.doc().set(data);
+  console.log(res);
+};
+
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();

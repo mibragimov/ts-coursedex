@@ -12,10 +12,12 @@ import { NotFound } from './NotFound';
 import { auth, createUserProfileDocument } from '../firebase/firebase.utils';
 import { setCurrentUser, User } from '../actions';
 import { StoreState } from '../reducers';
+import { Forbidden } from './Forbidden';
 
 interface AppProps {
   currentUser: User;
   setCurrentUser: typeof setCurrentUser;
+  isAuthenticated: boolean;
 }
 
 class _App extends React.Component<AppProps> {
@@ -45,32 +47,47 @@ class _App extends React.Component<AppProps> {
     });
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.unsubscribeFromAuth();
   }
 
   render() {
-    console.log(this.props.currentUser);
+    let routes: JSX.Element;
 
-    return (
-      <div>
-        <Header currentUser={this.props.currentUser} />
+    routes = (
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/create-course" component={CreateCourse} />
+        <Route path="/update-course" component={UpdateCourse} />
+        <Route path="/course-detail" component={CourseDetail} />
+        <Route component={NotFound} />
+      </Switch>
+    );
+
+    if (!this.props.isAuthenticated) {
+      routes = (
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/sign-in" component={Signin} />
           <Route path="/sign-up" component={Signup} />
-          <Route path="/create-course" component={CreateCourse} />
-          <Route path="/update-course" component={UpdateCourse} />
-          <Route path="/course-detail" component={CourseDetail} />
-          <Route component={NotFound} />
+          <Route component={Forbidden} />
         </Switch>
+      );
+    }
+    return (
+      <div>
+        <Header currentUser={this.props.currentUser} />
+        {routes}
       </div>
     );
   }
 }
 
-const mapStateToProps = (state: StoreState): { currentUser: User } => ({
+const mapStateToProps = (
+  state: StoreState
+): { currentUser: User; isAuthenticated: boolean } => ({
   currentUser: state.user,
+  isAuthenticated: state.user !== null,
 });
 
 export const App = connect(mapStateToProps, { setCurrentUser })(_App);
