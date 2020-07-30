@@ -9,7 +9,7 @@ export const Spinner = (props: SpinnerProps): JSX.Element => {
   return (
     <Loader
       type="Plane"
-      color="#00BFFF"
+      color="#8458b3"
       height={150}
       width={150}
       visible={props.visible}

@@ -12,7 +12,7 @@ export const Header = (props: HeaderProps): JSX.Element => {
     <>
       <div className="header">
         <div className="bounds">
-          <h1 className="header--logo">Courses</h1>
+          <h1 className="header--logo">Coursedex</h1>
           <nav>
             {props.currentUser ? (
               <span>Welcome {props.currentUser.displayName}</span>

@@ -120,6 +120,10 @@ const _CreateCourse = (props: CreateCourseProps): JSX.Element => {
                 </li>
                 <li className="course--stats--list--item">
                   <h4>Materials Needed</h4>
+                  <p style={{ fontSize: '12px', color: 'inherit' }}>
+                    (seperate with commas)
+                  </p>
+
                   <div>
                     <textarea
                       id="materialsNeeded"

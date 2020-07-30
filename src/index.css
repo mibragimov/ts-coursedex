@@ -132,7 +132,7 @@ i {
 }
 
 i:hover {
-  color: #69a6ce;
+  color: #8458b3;
   cursor: pointer;
 }
 .error-page-paragraph {
@@ -153,7 +153,7 @@ i:hover {
   text-decoration: none;
   padding: 10px;
   font-size: 1rem;
-  border: 1px solid #69a6ce;
+  border: 1px solid #8458b3;
   text-transform: uppercase;
   font-weight: 500;
   padding: 10px 25px;
@@ -162,7 +162,7 @@ i:hover {
   transition: all 0.3s ease;
 }
 .error-page-btn a:hover {
-  background-color: #69a6ce;
+  background-color: #8458b3;
   color: white;
 }
 /* End of Show and Hide password css styles */
@@ -257,9 +257,10 @@ body {
 
 /* line 13, ../sass/global.sass */
 .header {
-  background: #69a6ce;
+  background: #8458b3;
   padding: 20px 0;
   margin-bottom: 30px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 /* line 17, ../sass/global.sass */
 .header--logo {
@@ -337,7 +338,7 @@ h1 {
 
 /* line 61, ../sass/global.sass */
 a {
-  color: #69a6ce;
+  color: #8458b3;
   cursor: pointer;
   text-decoration: none;
   -webkit-transition: color 0.2s;
@@ -453,7 +454,7 @@ p {
 
 /* line 102, ../sass/global.sass */
 .course--module {
-  background: #69a6ce;
+  background: #8458b3;
   border-radius: 8px;
   padding: 30px;
   margin-bottom: 30px;
@@ -461,6 +462,11 @@ p {
   display: block;
   position: relative;
   box-sizing: border-box;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+}
+.course--module:hover {
+  transform: scale(1.015);
 }
 /* line 2, ../sass/mixins.sass */
 .course--module:before,
@@ -510,7 +516,7 @@ p {
 }
 /* line 139, ../sass/global.sass */
 .course--add--module:hover .add {
-  fill: #69a6ce;
+  fill: #8458b3;
 }
 /* line 141, ../sass/global.sass */
 .course--add--title {
@@ -554,7 +560,7 @@ p {
 /* line 171, ../sass/global.sass */
 .course--header p {
   font-size: 18px;
-  color: #69a6ce;
+  color: #8458b3;
   font-weight: 100;
 }
 /* line 176, ../sass/global.sass */
@@ -575,7 +581,7 @@ p {
 .course--description p {
   font-size: 16px;
   line-height: 1.8;
-  color: #69a6ce;
+  color: #8458b3;
 }
 /* line 195, ../sass/global.sass */
 .course--description ol,
@@ -714,7 +720,7 @@ textarea {
   padding: 15px;
   font-size: 16px;
   margin: 0 0 20px;
-  border: 1px solid #69a6ce;
+  border: 1px solid #8458b3;
   color: #666;
   line-height: 1.8;
   outline: none;
@@ -743,7 +749,7 @@ textarea:-ms-input-placeholder {
 }
 /* line 485, ../sass/global.sass */
 textarea:focus {
-  border-color: #69a6ce;
+  border-color: #8458b3;
 }
 
 /* line 488, ../sass/global.sass */
@@ -776,7 +782,7 @@ input:-ms-input-placeholder {
 }
 /* line 500, ../sass/global.sass */
 input:focus {
-  border-color: #69a6ce;
+  border-color: #8458b3;
 }
 
 /* line 29, ../sass/mixins.sass */
@@ -798,7 +804,7 @@ input:focus {
 
 /* line 507, ../sass/global.sass */
 .button {
-  background: #69a6ce;
+  background: #8458b3;
   color: #fff;
   font-family: 'Work Sans', sans-serif;
   font-size: 18px;
@@ -822,14 +828,14 @@ input:focus {
 }
 /* line 522, ../sass/global.sass */
 .button:not(.button-secondary):hover {
-  background: #69a6ce;
+  background: #8458b3;
 }
 
 /* line 525, ../sass/global.sass */
 .button-secondary {
-  color: #69a6ce;
+  color: #8458b3;
   background: none;
-  box-shadow: 0 0 0 2px #69a6ce inset;
+  box-shadow: 0 0 0 2px #8458b3 inset;
   -webkit-transition: box-shadow 0.2s, color 0.2s;
   -moz-transition: box-shadow 0.2s, color 0.2s;
   -ms-transition: box-shadow 0.2s, color 0.2s;
@@ -839,8 +845,8 @@ input:focus {
 }
 /* line 530, ../sass/global.sass */
 .button-secondary:hover {
-  color: #69a6ce;
-  box-shadow: 0 0 0 2px #69a6ce inset;
+  color: #8458b3;
+  box-shadow: 0 0 0 2px #8458b3 inset;
 }
 
 /* adds additional padding to the bottom of an element */
