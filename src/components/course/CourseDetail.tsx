@@ -41,6 +41,11 @@ const _CourseDetail = ({
     readDocumentCallback();
   }, []);
 
+  /* temporary solution to keep course details on browser refresh, localstorage */
+  if (course) {
+    localStorage.setItem('_course', JSON.stringify(course));
+  }
+
   const handleDeleteCourse = async (): Promise<void> => {
     await deleteDocument(match.params.id);
     history.push('/');
@@ -50,7 +55,7 @@ const _CourseDetail = ({
     if (currentUser && currentUser.uid === course.owner) {
       return (
         <span>
-          <Link className="button" to="/update-course">
+          <Link className="button" to={`/update-course/${match.params.id}`}>
             Update Course
           </Link>
           <button className="button" onClick={() => setIsModalOpen(true)}>

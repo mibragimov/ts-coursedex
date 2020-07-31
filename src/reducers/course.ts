@@ -10,6 +10,8 @@ const INITIAL_STATE = {
   loadingDocsError: null,
   deleting: false,
   deleteError: null,
+  updating: false,
+  updateError: null,
 };
 
 export const courseReducer = (
@@ -82,6 +84,22 @@ export const courseReducer = (
         ...state,
         deleting: false,
         deleteError: action.payload,
+      };
+    case ActionTypes.updateDocumentStart:
+      return {
+        ...state,
+        updating: true,
+      };
+    case ActionTypes.updateDocumentSuccess:
+      return {
+        ...state,
+        updating: false,
+      };
+    case ActionTypes.updateDocumentFailure:
+      return {
+        ...state,
+        updating: false,
+        updateError: action.payload,
       };
     default:
       return state;

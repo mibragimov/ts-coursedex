@@ -34,7 +34,7 @@ const _CreateCourse = (props: CreateCourseProps): JSX.Element => {
     props.history.push('/');
   };
 
-  const validate = () => {
+  const validateFormFields = () => {
     if (!_.isEmpty(errors)) {
       return (
         <div>
@@ -59,7 +59,7 @@ const _CreateCourse = (props: CreateCourseProps): JSX.Element => {
     <div className="bounds course--detail">
       <h1>Create Course</h1>
       <div>
-        {validate()}
+        {validateFormFields()}
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid-66">
             <div className="course--header">
@@ -138,7 +138,7 @@ const _CreateCourse = (props: CreateCourseProps): JSX.Element => {
             </div>
           </div>
           <div className="grid-100 pad-bottom">
-            <button className="button" type="submit">
+            <button className="button" type="submit" disabled={props.creating}>
               {props.creating ? (
                 <Emoji symbol="⌛" label="Creating" />
               ) : (
@@ -148,6 +148,7 @@ const _CreateCourse = (props: CreateCourseProps): JSX.Element => {
             <button
               className="button button-secondary"
               onClick={() => props.history.goBack()}
+              disabled={props.creating}
             >
               Cancel
             </button>

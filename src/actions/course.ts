@@ -5,6 +5,7 @@ import {
   readDocumentsFromCollection,
   readDocumentById,
   deleteDocumentFromCollection,
+  updateDocumentFromCollection,
 } from '../firebase/firebase.utils';
 
 export interface Course {
@@ -17,6 +18,8 @@ export interface Course {
   loadingDocsError: string | null;
   deleting: boolean;
   deleteError: string | null;
+  updating: boolean;
+  updateError: string | null;
 }
 
 export interface CourseDetails {
@@ -175,6 +178,42 @@ export const deleteDocument = (id: string) => {
       dispatch(deleteDocumentSuccess(id));
     } catch (error) {
       dispatch(deleteDocumentFailure(error.message));
+    }
+  };
+};
+
+// Update a document
+
+export interface UpdateDocumentStartAction {
+  type: ActionTypes.updateDocumentStart;
+}
+export interface UpdateDocumentSuccessAction {
+  type: ActionTypes.updateDocumentSuccess;
+}
+export interface UpdateDocumentFailureAction {
+  type: ActionTypes.updateDocumentFailure;
+  payload: string;
+}
+
+const updateDocumentStart = (): UpdateDocumentStartAction => ({
+  type: ActionTypes.updateDocumentStart,
+});
+const updateDocumentSuccess = (): UpdateDocumentSuccessAction => ({
+  type: ActionTypes.updateDocumentSuccess,
+});
+const updateDocumentFailure = (err: string): UpdateDocumentFailureAction => ({
+  type: ActionTypes.updateDocumentFailure,
+  payload: err,
+});
+
+export const updateDocument = (id: string, data: {}) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch(updateDocumentStart());
+      await updateDocumentFromCollection(id, data);
+      dispatch(updateDocumentSuccess());
+    } catch (error) {
+      dispatch(updateDocumentFailure(error.message));
     }
   };
 };

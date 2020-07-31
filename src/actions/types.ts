@@ -12,6 +12,9 @@ import {
   DeleteDocumentStartAction,
   DeleteDocumentSuccessAction,
   DeleteDocumentFailureAction,
+  UpdateDocumentStartAction,
+  UpdateDocumentSuccessAction,
+  UpdateDocumentFailureAction,
 } from './course';
 
 export enum ActionTypes {
@@ -28,6 +31,9 @@ export enum ActionTypes {
   deleteDocumentStart,
   deleteDocumentSuccess,
   delelteDocumentFailure,
+  updateDocumentStart,
+  updateDocumentSuccess,
+  updateDocumentFailure,
 }
 
 export type Action =
@@ -43,4 +49,7 @@ export type Action =
   | ReadDocSuccess
   | DeleteDocumentStartAction
   | DeleteDocumentSuccessAction
-  | DeleteDocumentFailureAction;
+  | DeleteDocumentFailureAction
+  | UpdateDocumentStartAction
+  | UpdateDocumentSuccessAction
+  | UpdateDocumentFailureAction;
