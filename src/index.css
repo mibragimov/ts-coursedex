@@ -816,11 +816,17 @@ input:focus {
   font-weight: bold;
   display: inline-block;
   box-sizing: border-box;
+  cursor: pointer;
   -webkit-transition: background 0.2s;
   -moz-transition: background 0.2s;
   -ms-transition: background 0.2s;
   -o-transition: background 0.2s;
   transition: background 0.2s;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  pointer-events: all !important;
 }
 /* line 520, ../sass/global.sass */
 .button:focus {
@@ -828,7 +834,7 @@ input:focus {
 }
 /* line 522, ../sass/global.sass */
 .button:not(.button-secondary):hover {
-  background: #8458b3;
+  background: rgba(132, 88, 179, 0.801);
 }
 
 /* line 525, ../sass/global.sass */

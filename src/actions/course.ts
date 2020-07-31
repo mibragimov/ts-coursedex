@@ -4,6 +4,7 @@ import {
   addDocumentToCollection,
   readDocumentsFromCollection,
   readDocumentById,
+  deleteDocumentFromCollection,
 } from '../firebase/firebase.utils';
 
 export interface Course {
@@ -14,6 +15,8 @@ export interface Course {
   loadingSelectedCourse: boolean;
   loadingDocs: boolean;
   loadingDocsError: string | null;
+  deleting: boolean;
+  deleteError: string | null;
 }
 
 export interface CourseDetails {
@@ -23,6 +26,7 @@ export interface CourseDetails {
   estimatedTime: string;
   materialsNeeded: string;
   displayName: string;
+  owner: string;
 }
 
 // Set Documents
@@ -133,6 +137,44 @@ export const readDocument = (id: string) => {
       dispatch(readDocSuccess(data));
     } catch (error) {
       dispatch(readDocFailure(error.message));
+    }
+  };
+};
+
+// Delete a document
+
+export interface DeleteDocumentStartAction {
+  type: ActionTypes.deleteDocumentStart;
+}
+export interface DeleteDocumentSuccessAction {
+  type: ActionTypes.deleteDocumentSuccess;
+  payload: string;
+}
+export interface DeleteDocumentFailureAction {
+  type: ActionTypes.delelteDocumentFailure;
+  payload: string;
+}
+
+const deleteDocumentStart = (): DeleteDocumentStartAction => ({
+  type: ActionTypes.deleteDocumentStart,
+});
+const deleteDocumentSuccess = (id: string): DeleteDocumentSuccessAction => ({
+  type: ActionTypes.deleteDocumentSuccess,
+  payload: id,
+});
+const deleteDocumentFailure = (err: string): DeleteDocumentFailureAction => ({
+  type: ActionTypes.delelteDocumentFailure,
+  payload: err,
+});
+
+export const deleteDocument = (id: string) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch(deleteDocumentStart());
+      await deleteDocumentFromCollection(id);
+      dispatch(deleteDocumentSuccess(id));
+    } catch (error) {
+      dispatch(deleteDocumentFailure(error.message));
     }
   };
 };

@@ -8,6 +8,8 @@ const INITIAL_STATE = {
   loadingSelectedCourse: false,
   loadingDocs: false,
   loadingDocsError: null,
+  deleting: false,
+  deleteError: null,
 };
 
 export const courseReducer = (
@@ -63,6 +65,23 @@ export const courseReducer = (
       return {
         ...state,
         loadingSelectedCourse: false,
+      };
+    case ActionTypes.deleteDocumentStart:
+      return {
+        ...state,
+        deleting: true,
+      };
+    case ActionTypes.deleteDocumentSuccess:
+      return {
+        ...state,
+        deleting: false,
+        courses: state.courses.filter((course) => course.id !== action.payload),
+      };
+    case ActionTypes.delelteDocumentFailure:
+      return {
+        ...state,
+        deleting: false,
+        deleteError: action.payload,
       };
     default:
       return state;
