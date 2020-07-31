@@ -5,6 +5,7 @@ import { History } from 'history';
 import { StoreState } from '../reducers';
 import { readDocuments, CourseDetails } from '../actions';
 import { Spinner } from './Spinner';
+import { Error } from './Error';
 
 interface HomeProps {
   readDocuments: Function;
@@ -12,6 +13,7 @@ interface HomeProps {
   loadingDocs: boolean;
   loadingDocsError: string | null;
   history: History;
+  isAuth: boolean;
 }
 
 function _Home(props: HomeProps): JSX.Element {
@@ -36,40 +38,57 @@ function _Home(props: HomeProps): JSX.Element {
     });
   };
 
-  return (
-    <div className="bounds">
-      {props.loadingDocs ? (
-        <div style={{ textAlign: 'center', marginTop: '10rem' }}>
-          <Spinner visible={props.loadingDocs} />
+  const renderCreateCourseButton = (): JSX.Element | undefined => {
+    if (props.isAuth) {
+      return (
+        <div className="grid-33">
+          <Link
+            className="course--module course--add--module"
+            to="/create-course"
+          >
+            <h3 className="course--add--title">
+              <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                x="0px"
+                y="0px"
+                viewBox="0 0 13 13"
+                className="add"
+              >
+                <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "></polygon>
+              </svg>
+              New Course
+            </h3>
+          </Link>
         </div>
-      ) : (
-        <React.Fragment>
-          {renderCourses()}
-          <div className="grid-33">
-            <Link
-              className="course--module course--add--module"
-              to="/create-course"
-            >
-              <h3 className="course--add--title">
-                <svg
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  x="0px"
-                  y="0px"
-                  viewBox="0 0 13 13"
-                  className="add"
-                >
-                  <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "></polygon>
-                </svg>
-                New Course
-              </h3>
-            </Link>
+      );
+    }
+
+    return;
+  };
+
+  const renderContent = () => {
+    if (props.loadingDocs) {
+      return (
+        <div className="bounds">
+          <div style={{ textAlign: 'center', marginTop: '10rem' }}>
+            <Spinner visible={props.loadingDocs} />
           </div>
-        </React.Fragment>
-      )}
-      {props.loadingDocsError}
-    </div>
-  );
+        </div>
+      );
+    } else if (props.loadingDocsError) {
+      return <Error />;
+    } else {
+      return (
+        <div className="bounds">
+          {renderCourses()}
+          {renderCreateCourseButton()}
+        </div>
+      );
+    }
+  };
+
+  return renderContent();
 }
 
 const mapStateToProps = (

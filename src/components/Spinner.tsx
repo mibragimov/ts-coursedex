@@ -8,7 +8,7 @@ interface SpinnerProps {
 export const Spinner = (props: SpinnerProps): JSX.Element => {
   return (
     <Loader
-      type="Plane"
+      type="Oval"
       color="#8458b3"
       height={150}
       width={150}
