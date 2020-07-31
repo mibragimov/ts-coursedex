@@ -71,9 +71,7 @@ function _Home(props: HomeProps): JSX.Element {
     if (props.loadingDocs) {
       return (
         <div className="bounds">
-          <div style={{ textAlign: 'center', marginTop: '10rem' }}>
-            <Spinner visible={props.loadingDocs} />
-          </div>
+          <Spinner visible={props.loadingDocs} />
         </div>
       );
     } else if (props.loadingDocsError) {

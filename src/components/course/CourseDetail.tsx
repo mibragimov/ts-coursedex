@@ -81,11 +81,7 @@ const _CourseDetail = ({
 
   const renderContent = (): JSX.Element => {
     if (loadingSelectedCourse) {
-      return (
-        <div style={{ textAlign: 'center', marginTop: '10rem' }}>
-          <Spinner visible={loadingSelectedCourse} />
-        </div>
-      );
+      return <Spinner visible={loadingSelectedCourse} />;
     } else {
       return (
         <React.Fragment>

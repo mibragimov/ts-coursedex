@@ -7,12 +7,14 @@ interface SpinnerProps {
 
 export const Spinner = (props: SpinnerProps): JSX.Element => {
   return (
-    <Loader
-      type="Oval"
-      color="#8458b3"
-      height={150}
-      width={150}
-      visible={props.visible}
-    />
+    <div style={{ textAlign: 'center', marginTop: '10rem' }}>
+      <Loader
+        type="Oval"
+        color="#8458b3"
+        height={150}
+        width={150}
+        visible={props.visible}
+      />
+    </div>
   );
 };
