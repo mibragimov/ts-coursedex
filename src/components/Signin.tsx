@@ -1,35 +1,59 @@
 import React from 'react';
+import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import { History } from 'history';
 import { auth } from '../firebase/firebase.utils';
+import { useForm } from 'react-hook-form';
+import { Emoji } from './Emoji';
 
 interface SigninProps {
   history: History;
 }
-
+type Inputs = {
+  emailAddress: string;
+  password: string;
+};
 const errorStyle = {
   color: 'red',
   marginBottom: '10px',
+};
+
+const span = {
   display: 'block',
 };
 
 export const Signin = (props: SigninProps): JSX.Element => {
-  const [emailAddress, setEmailAddress] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const { register, handleSubmit, errors } = useForm<Inputs>();
+  const [disabled, setDisabled] = React.useState(false);
+
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  const handleSubmit = async (
-    event: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
-    event.preventDefault();
+  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  const onSubmit = async (data: Inputs): Promise<void> => {
     try {
-      await auth.signInWithEmailAndPassword(emailAddress, password);
-      setEmailAddress('');
-      setPassword('');
+      setDisabled(true);
+      await auth.signInWithEmailAndPassword(data.emailAddress, data.password);
+
       setErrorMessage('');
       props.history.push('/');
     } catch (error) {
+      setDisabled(false);
       setErrorMessage(error.message);
+    }
+  };
+
+  const renderValidationErrors = () => {
+    if (!_.isEmpty(errors) || errorMessage) {
+      return (
+        <div style={errorStyle}>
+          <span style={span}>
+            {errors.emailAddress && errors.emailAddress.message}
+          </span>
+          <span style={span}>{errors.password && errors.password.message}</span>
+          <span style={span}>{errorMessage && errorMessage}</span>
+        </div>
+      );
     }
   };
 
@@ -38,8 +62,8 @@ export const Signin = (props: SigninProps): JSX.Element => {
       <div className="grid-33 centered signin">
         <h1>Sign In</h1>
         <div>
-          {errorMessage ? <span style={errorStyle}>{errorMessage}</span> : null}
-          <form onSubmit={handleSubmit}>
+          {renderValidationErrors()}
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div>
               <input
                 id="emailAddress"
@@ -47,9 +71,14 @@ export const Signin = (props: SigninProps): JSX.Element => {
                 type="text"
                 className=""
                 placeholder="Email Address"
-                value={emailAddress}
-                onChange={(e) => setEmailAddress(e.target.value)}
-                required
+                ref={register({
+                  required: 'Email is required',
+                  pattern: {
+                    value: emailRegex,
+                    message: 'Please provide a valid email',
+                  },
+                })}
+                onChange={() => setErrorMessage('')}
               />
             </div>
             <div>
@@ -59,16 +88,22 @@ export const Signin = (props: SigninProps): JSX.Element => {
                 type="password"
                 className=""
                 placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
+                ref={register({ required: 'Password is required' })}
+                onChange={() => setErrorMessage('')}
               />
             </div>
             <div className="grid-100 pad-bottom">
-              <button className="button" type="submit">
-                Sign In
+              <button className="button" type="submit" disabled={disabled}>
+                <Emoji label="Sign In" symbol="🚀" />
               </button>
-              <button className="button button-secondary">Cancel</button>
+              <button
+                className="button button-secondary"
+                type="button"
+                onClick={() => props.history.push('/')}
+                disabled={disabled}
+              >
+                Cancel
+              </button>
             </div>
           </form>
         </div>
