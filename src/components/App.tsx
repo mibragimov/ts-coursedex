@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { Home } from './Home';
 import { Signup } from './Signup';
 import { Signin } from './Signin';
@@ -73,6 +73,8 @@ class _App extends React.Component<AppProps> {
     if (this.props.isAuthenticated) {
       routes = (
         <Switch>
+          <Redirect from="/sign-in" to="/" />
+          <Redirect from="/sign-up" to="/" />
           <Route
             path="/"
             exact

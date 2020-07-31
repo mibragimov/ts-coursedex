@@ -5,6 +5,7 @@ import { History } from 'history';
 import { auth } from '../firebase/firebase.utils';
 import { useForm } from 'react-hook-form';
 import { Emoji } from './Emoji';
+import { GoogleSignin } from './GoogleSignin';
 
 interface SigninProps {
   history: History;
@@ -107,6 +108,8 @@ export const Signin = (props: SigninProps): JSX.Element => {
             </div>
           </form>
         </div>
+        <p>&nbsp;</p>
+        <GoogleSignin />
         <p>&nbsp;</p>
         <p>
           Don't have a user account? <Link to="/sign-up">Click here</Link> to
