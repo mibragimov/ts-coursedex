@@ -11,6 +11,7 @@ import { setCurrentUser, User } from '../actions';
 import { StoreState } from '../reducers';
 import { Forbidden } from './Forbidden';
 import { Spinner } from './Spinner';
+import { ErrorBoundary } from './ErrorBoundary';
 
 // dynamic imports for code splitting with react lazy
 // TODO: refactor
@@ -75,29 +76,9 @@ class _App extends React.Component<AppProps> {
     let routes: JSX.Element;
 
     routes = (
-      <Suspense fallback={<Spinner visible={true} />}>
-        <Switch>
-          <Route
-            path="/"
-            exact
-            render={(props) => (
-              <Home {...props} isAuth={this.props.isAuthenticated} />
-            )}
-          />
-          <Route path="/course-detail/:id" component={CourseDetail} />
-          <Route path="/sign-in" component={Signin} />
-          <Route path="/sign-up" component={Signup} />
-          <Route component={Forbidden} />
-        </Switch>
-      </Suspense>
-    );
-
-    if (this.props.isAuthenticated) {
-      routes = (
+      <ErrorBoundary>
         <Suspense fallback={<Spinner visible={true} />}>
           <Switch>
-            <Redirect from="/sign-in" to="/" />
-            <Redirect from="/sign-up" to="/" />
             <Route
               path="/"
               exact
@@ -105,12 +86,36 @@ class _App extends React.Component<AppProps> {
                 <Home {...props} isAuth={this.props.isAuthenticated} />
               )}
             />
-            <Route path="/create-course" component={CreateCourse} />
-            <Route path="/update-course/:id" component={UpdateCourse} />
             <Route path="/course-detail/:id" component={CourseDetail} />
-            <Route component={NotFound} />
+            <Route path="/sign-in" component={Signin} />
+            <Route path="/sign-up" component={Signup} />
+            <Route component={Forbidden} />
           </Switch>
         </Suspense>
+      </ErrorBoundary>
+    );
+
+    if (this.props.isAuthenticated) {
+      routes = (
+        <ErrorBoundary>
+          <Suspense fallback={<Spinner visible={true} />}>
+            <Switch>
+              <Redirect from="/sign-in" to="/" />
+              <Redirect from="/sign-up" to="/" />
+              <Route
+                path="/"
+                exact
+                render={(props) => (
+                  <Home {...props} isAuth={this.props.isAuthenticated} />
+                )}
+              />
+              <Route path="/create-course" component={CreateCourse} />
+              <Route path="/update-course/:id" component={UpdateCourse} />
+              <Route path="/course-detail/:id" component={CourseDetail} />
+              <Route component={NotFound} />
+            </Switch>
+          </Suspense>
+        </ErrorBoundary>
       );
     }
     return (

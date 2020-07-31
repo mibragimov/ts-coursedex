@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function Error() {
+export function ErrorMessage() {
   return (
     <div className="bounds">
       <h1>Error</h1>

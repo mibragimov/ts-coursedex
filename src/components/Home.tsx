@@ -5,7 +5,6 @@ import { History } from 'history';
 import { StoreState } from '../reducers';
 import { readDocuments, CourseDetails } from '../actions';
 import { Spinner } from './Spinner';
-import { Error } from './Error';
 
 interface HomeProps {
   readDocuments: Function;
@@ -74,8 +73,6 @@ function _Home(props: HomeProps): JSX.Element {
           <Spinner visible={props.loadingDocs} />
         </div>
       );
-    } else if (props.loadingDocsError) {
-      return <Error />;
     } else {
       return (
         <div className="bounds">
