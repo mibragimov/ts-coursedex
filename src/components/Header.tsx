@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { auth } from '../firebase/firebase.utils';
 import { User } from '../actions';
 
@@ -8,6 +8,13 @@ interface HeaderProps {
 }
 
 export const Header = (props: HeaderProps): JSX.Element => {
+  const history = useHistory();
+  const handleSignOut = async (): Promise<void> => {
+    await auth.signOut();
+    localStorage.removeItem('_user');
+    history.push('/sign-in');
+  };
+
   return (
     <>
       <div className="header">
@@ -23,7 +30,7 @@ export const Header = (props: HeaderProps): JSX.Element => {
             )}
 
             {props.currentUser ? (
-              <a href="#" className="signout" onClick={() => auth.signOut()}>
+              <a href="#" className="signout" onClick={handleSignOut}>
                 Signout
               </a>
             ) : (

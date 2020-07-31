@@ -68,6 +68,7 @@ class _App extends React.Component<AppProps> {
       routes = (
         <Switch>
           <Route path="/" exact component={Home} />
+          <Route path="/course-detail/:id" component={CourseDetail} />
           <Route path="/sign-in" component={Signin} />
           <Route path="/sign-up" component={Signup} />
           <Route component={Forbidden} />

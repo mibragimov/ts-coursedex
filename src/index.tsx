@@ -9,7 +9,13 @@ import { reducers } from './reducers';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import './index.css';
 
-const store = createStore(reducers, {}, applyMiddleware(thunk));
+const store = createStore(
+  reducers,
+  {
+    user: JSON.parse(localStorage.getItem('_user')!),
+  },
+  applyMiddleware(thunk)
+);
 
 ReactDOM.render(
   <Provider store={store}>
