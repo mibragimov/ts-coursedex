@@ -37,7 +37,11 @@ interface AppProps {
   checkUserSession: Function;
 }
 
-const _App = ({ isAuthenticated, currentUser, checkUserSession }: AppProps) => {
+const _App = ({
+  isAuthenticated,
+  currentUser,
+  checkUserSession,
+}: AppProps): JSX.Element => {
   React.useEffect(() => {
     checkUserSession();
   }, []);

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { History } from 'history';
 import { useForm } from 'react-hook-form';
 import { Emoji } from './Emoji';
-import { GoogleSignin } from './GoogleSignin';
+// import { GoogleSignin } from './GoogleSignin';
 import { signinWithEmailStart } from '../actions';
 import { StoreState } from '../reducers';
 
@@ -110,8 +110,8 @@ const _Signin = ({
             </div>
           </form>
         </div>
-        <p>&nbsp;</p>
-        <GoogleSignin />
+        {/* <p>&nbsp;</p>
+        <GoogleSignin /> */}
         <p>&nbsp;</p>
         <p>
           Don't have a user account? <Link to="/sign-up">Click here</Link> to
