@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { History } from 'history';
-import { StoreState } from '../reducers';
-import { readDocuments, CourseDetails } from '../actions';
+import { StoreState, selectCourses } from '../reducers';
+import { readDocsStart, CourseDetails } from '../actions';
 import { Spinner } from './Spinner';
 
 interface HomeProps {
-  readDocuments: Function;
+  readDocsStart: Function;
   courses: CourseDetails[];
   loadingDocs: boolean;
   loadingDocsError: string | null;
@@ -17,7 +17,7 @@ interface HomeProps {
 
 function _Home(props: HomeProps): JSX.Element {
   React.useEffect(() => {
-    props.readDocuments();
+    props.readDocsStart();
   }, []);
 
   const renderCourses = (): JSX.Element[] => {
@@ -37,33 +37,29 @@ function _Home(props: HomeProps): JSX.Element {
     });
   };
 
-  const renderCreateCourseButton = (): JSX.Element | undefined => {
-    if (props.isAuth) {
-      return (
-        <div className="grid-33">
-          <Link
-            className="course--module course--add--module"
-            to="/create-course"
-          >
-            <h3 className="course--add--title">
-              <svg
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                x="0px"
-                y="0px"
-                viewBox="0 0 13 13"
-                className="add"
-              >
-                <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "></polygon>
-              </svg>
-              New Course
-            </h3>
-          </Link>
-        </div>
-      );
-    }
-
-    return;
+  const renderCreateCourseButton = (): JSX.Element => {
+    return (
+      <div className="grid-33">
+        <Link
+          className="course--module course--add--module"
+          to={props.isAuth ? '/create-course' : '/sign-in'}
+        >
+          <h3 className="course--add--title">
+            <svg
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              x="0px"
+              y="0px"
+              viewBox="0 0 13 13"
+              className="add"
+            >
+              <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "></polygon>
+            </svg>
+            New Course
+          </h3>
+        </Link>
+      </div>
+    );
   };
 
   const renderContent = () => {
@@ -93,9 +89,9 @@ const mapStateToProps = (
   loadingDocs: boolean;
   loadingDocsError: string | null;
 } => ({
-  courses: state.course.courses,
+  courses: selectCourses(state),
   loadingDocs: state.course.loadingDocs,
   loadingDocsError: state.course.loadingDocsError,
 });
 
-export const Home = connect(mapStateToProps, { readDocuments })(_Home);
+export const Home = connect(mapStateToProps, { readDocsStart })(_Home);

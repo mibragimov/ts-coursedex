@@ -12,7 +12,12 @@ import {
   signinSuccess,
   signinFailure,
 } from '../actions';
-import { signoutSuccess, signoutFailure } from './user';
+import {
+  signoutSuccess,
+  signoutFailure,
+  SignupStartAction,
+  SignoutStart,
+} from './user';
 
 export function* getSnapshotFromUserAuth(user: firebase.User, data?: {}) {
   try {
@@ -51,19 +56,36 @@ export function* signinWithGoogle() {
 
 export function* signinWithEmail({
   payload: { email, password },
+  history,
 }: SigninWithEmailStartAction) {
   try {
     const { user } = yield auth.signInWithEmailAndPassword(email, password);
     yield getSnapshotFromUserAuth(user);
+    history.push('/');
   } catch (error) {
     yield put(signinFailure(error.message));
   }
 }
 
-export function* signout() {
+export function* signup({
+  payload: { email, password },
+  history,
+  additionalData,
+}: SignupStartAction) {
+  try {
+    const { user } = yield auth.createUserWithEmailAndPassword(email, password);
+    yield getSnapshotFromUserAuth(user, additionalData);
+    history.push('/');
+  } catch (error) {
+    yield put(signinFailure(error.message));
+  }
+}
+
+export function* signout({ history }: SignoutStart) {
   try {
     yield auth.signOut();
     yield put(signoutSuccess());
+    history.push('/');
   } catch (error) {
     yield put(signoutFailure(error.message));
   }
@@ -82,9 +104,13 @@ export function* onEmailSignin() {
   );
 }
 
+export function* onSignup() {
+  yield takeLatest<SignupStartAction>(ActionTypes.signupStart, signup);
+}
+
 // signout listener
 export function* onSignout() {
-  yield takeLatest(ActionTypes.signoutStart, signout);
+  yield takeLatest<SignoutStart>(ActionTypes.signoutStart, signout);
 }
 
 // check user session listener
@@ -96,6 +122,7 @@ export function* userSaga() {
   yield all([
     call(onGoogleSigninStart),
     call(onEmailSignin),
+    call(onSignup),
     call(onCheckUserSession),
     call(onSignout),
   ]);

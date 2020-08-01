@@ -5,6 +5,7 @@ import {
   SigninFailureAction,
   SignoutSuccess,
   SignoutFailure,
+  SignupStartAction,
 } from './user';
 import {
   SetDocumentStartAction,
@@ -33,6 +34,10 @@ export enum ActionTypes {
   signinSuccess = '@app/signin-success',
   signinFailure = '@app/signin-failure',
   checkUserSession = '@app/check-user-session',
+
+  signupStart = '@app/signup-start',
+  signupSuccess = '@app/signup-success',
+  signupFailure = '@app/signup-failure',
 
   signoutStart = '@app/signout-start',
   signoutSuccess = '@app/signout-success',
@@ -77,4 +82,5 @@ export type Action =
   | SigninSuccessAction
   | SigninFailureAction
   | SignoutSuccess
-  | SignoutFailure;
+  | SignoutFailure
+  | SignupStartAction;

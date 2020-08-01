@@ -11,8 +11,7 @@ interface HeaderProps {
 const _Header = (props: HeaderProps): JSX.Element => {
   const history = useHistory();
   const handleSignOut = (): void => {
-    props.signoutStart();
-    history.push('/sign-in');
+    props.signoutStart(history);
   };
 
   return (

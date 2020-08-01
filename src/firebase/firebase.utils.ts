@@ -24,8 +24,8 @@ export const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
 export const getCurrentUser = () => {
   return new Promise((resolve, reject) => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      unsubscribe();
       resolve(user);
+      unsubscribe();
     }, reject);
   });
 };

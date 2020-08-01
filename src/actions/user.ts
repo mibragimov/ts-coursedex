@@ -1,4 +1,5 @@
 import { ActionTypes } from './types';
+import { History } from 'history';
 
 export interface CurrentUser {
   createdAt: Date | undefined;
@@ -10,12 +11,15 @@ export interface CurrentUser {
 export interface User {
   currentUser: CurrentUser | null;
   error: string | null;
+  loading: boolean;
 }
 
-export type SigninTypes = {
+export interface SigninTypes {
   email: string;
   password: string;
-};
+}
+
+export interface SignupTypes extends SigninTypes {}
 
 //  Signin actions
 export interface GoogleSigninStartAction {
@@ -24,6 +28,7 @@ export interface GoogleSigninStartAction {
 export interface SigninWithEmailStartAction {
   type: ActionTypes.signinWithEmailStart;
   payload: SigninTypes;
+  history: History;
 }
 
 export interface SigninSuccessAction {
@@ -39,10 +44,12 @@ export const googleSigninStart = (): GoogleSigninStartAction => ({
   type: ActionTypes.googleSigninStart,
 });
 export const signinWithEmailStart = (
-  emailAndPassword: SigninTypes
+  emailAndPassword: SigninTypes,
+  history: History
 ): SigninWithEmailStartAction => ({
   type: ActionTypes.signinWithEmailStart,
   payload: emailAndPassword,
+  history: history,
 });
 export const signinSuccess = (
   user: firebase.User | null
@@ -55,10 +62,31 @@ export const signinFailure = (err: string | null): SigninFailureAction => ({
   payload: err,
 });
 
+// signup actions
+
+export interface SignupStartAction {
+  type: ActionTypes.signupStart;
+  payload: SignupTypes;
+  history: History;
+  additionalData: {};
+}
+
+export const signupStart = (
+  emailAndPassword: SignupTypes,
+  history: History,
+  additionalData: {}
+): SignupStartAction => ({
+  type: ActionTypes.signupStart,
+  payload: emailAndPassword,
+  history: history,
+  additionalData: additionalData,
+});
+
 // sign out actions
 
 export interface SignoutStart {
   type: ActionTypes.signoutStart;
+  history: History;
 }
 export interface SignoutSuccess {
   type: ActionTypes.signoutSuccess;
@@ -68,8 +96,9 @@ export interface SignoutFailure {
   payload: string | null;
 }
 
-export const signoutStart = (): SignoutStart => ({
+export const signoutStart = (history: History): SignoutStart => ({
   type: ActionTypes.signoutStart,
+  history,
 });
 export const signoutSuccess = (): SignoutSuccess => ({
   type: ActionTypes.signoutSuccess,

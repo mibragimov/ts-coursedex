@@ -11,6 +11,13 @@ export const selectCurrentUser = createSelector(
 
   (selectUserStore) => selectUserStore.currentUser
 );
+export const selectCourseStore = (state: StoreState) => state.course;
+
+export const selectCourses = createSelector(
+  [selectCourseStore],
+
+  (selectCourseStore) => selectCourseStore.courses
+);
 
 export interface StoreState {
   user: User;

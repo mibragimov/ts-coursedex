@@ -36,67 +36,60 @@ interface AppProps {
   isAuthenticated: boolean;
   checkUserSession: Function;
 }
-// TODO: convert class to functional component
-// TODO: use sagas for subscribing to auth state change
-class _App extends React.Component<AppProps> {
-  componentDidMount() {
-    this.props.checkUserSession();
-  }
 
-  render() {
-    let routes: JSX.Element;
+const _App = ({ isAuthenticated, currentUser, checkUserSession }: AppProps) => {
+  React.useEffect(() => {
+    checkUserSession();
+  }, []);
 
+  let routes: JSX.Element;
+
+  routes = (
+    <ErrorBoundary>
+      <Suspense fallback={<Spinner visible={true} />}>
+        <Switch>
+          <Route
+            path="/"
+            exact
+            render={(props) => <Home {...props} isAuth={isAuthenticated} />}
+          />
+          <Route path="/course-detail/:id" component={CourseDetail} />
+          <Route path="/sign-in" component={Signin} />
+          <Route path="/sign-up" component={Signup} />
+          <Route component={Forbidden} />
+        </Switch>
+      </Suspense>
+    </ErrorBoundary>
+  );
+
+  if (isAuthenticated) {
     routes = (
       <ErrorBoundary>
         <Suspense fallback={<Spinner visible={true} />}>
           <Switch>
+            <Redirect from="/sign-in" to="/" />
+            <Redirect from="/sign-up" to="/" />
             <Route
               path="/"
               exact
-              render={(props) => (
-                <Home {...props} isAuth={this.props.isAuthenticated} />
-              )}
+              render={(props) => <Home {...props} isAuth={isAuthenticated} />}
             />
+            <Route path="/create-course" component={CreateCourse} />
+            <Route path="/update-course/:id" component={UpdateCourse} />
             <Route path="/course-detail/:id" component={CourseDetail} />
-            <Route path="/sign-in" component={Signin} />
-            <Route path="/sign-up" component={Signup} />
-            <Route component={Forbidden} />
+            <Route component={NotFound} />
           </Switch>
         </Suspense>
       </ErrorBoundary>
     );
-
-    if (this.props.isAuthenticated) {
-      routes = (
-        <ErrorBoundary>
-          <Suspense fallback={<Spinner visible={true} />}>
-            <Switch>
-              <Redirect from="/sign-in" to="/" />
-              <Redirect from="/sign-up" to="/" />
-              <Route
-                path="/"
-                exact
-                render={(props) => (
-                  <Home {...props} isAuth={this.props.isAuthenticated} />
-                )}
-              />
-              <Route path="/create-course" component={CreateCourse} />
-              <Route path="/update-course/:id" component={UpdateCourse} />
-              <Route path="/course-detail/:id" component={CourseDetail} />
-              <Route component={NotFound} />
-            </Switch>
-          </Suspense>
-        </ErrorBoundary>
-      );
-    }
-    return (
-      <div>
-        <Header currentUser={this.props.currentUser} />
-        {routes}
-      </div>
-    );
   }
-}
+  return (
+    <div>
+      <Header currentUser={currentUser} />
+      {routes}
+    </div>
+  );
+};
 
 const mapStateToProps = (
   state: StoreState

@@ -2,7 +2,6 @@ import { ActionTypes } from './types';
 import { Dispatch } from 'redux';
 import {
   addDocumentToCollection,
-  readDocumentsFromCollection,
   readDocumentById,
   deleteDocumentFromCollection,
   updateDocumentFromCollection,
@@ -82,29 +81,17 @@ export interface ReadDocsFailure {
   payload: string;
 }
 
-const readDocsStart = (): ReadDocsStart => ({
+export const readDocsStart = (): ReadDocsStart => ({
   type: ActionTypes.readDocumentsStart,
 });
-const readDocsSuccess = (data: any): ReadDocsSuccess => ({
+export const readDocsSuccess = (data: any): ReadDocsSuccess => ({
   type: ActionTypes.readDocumentsSuccess,
   payload: data,
 });
-const readDocsFailure = (err: string): ReadDocsFailure => ({
+export const readDocsFailure = (err: string): ReadDocsFailure => ({
   type: ActionTypes.readDocumentsFailure,
   payload: err,
 });
-
-export const readDocuments = () => {
-  return async (dispatch: Dispatch) => {
-    try {
-      dispatch(readDocsStart());
-      const data = await readDocumentsFromCollection();
-      dispatch(readDocsSuccess(data));
-    } catch (error) {
-      dispatch(readDocsFailure(error.message));
-    }
-  };
-};
 
 // Read a single document
 
