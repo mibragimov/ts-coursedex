@@ -1,18 +1,17 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { auth } from '../firebase/firebase.utils';
-import { User } from '../actions';
+import { signoutStart, CurrentUser } from '../actions';
 
 interface HeaderProps {
-  currentUser: User;
+  currentUser: CurrentUser | null;
+  signoutStart: Function;
 }
 
-export const Header = (props: HeaderProps): JSX.Element => {
+const _Header = (props: HeaderProps): JSX.Element => {
   const history = useHistory();
-  const handleSignOut = async (): Promise<void> => {
-    await auth.signOut();
-    localStorage.removeItem('_user');
-    history.push('/sign-in');
+  const handleSignOut = (): void => {
+    props.signoutStart(history);
   };
 
   return (
@@ -45,3 +44,5 @@ export const Header = (props: HeaderProps): JSX.Element => {
     </>
   );
 };
+
+export const Header = connect(null, { signoutStart })(_Header);

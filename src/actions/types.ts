@@ -1,4 +1,12 @@
-import { SetCurrentUserAction } from './user';
+import {
+  GoogleSigninStartAction,
+  SigninWithEmailStartAction,
+  SigninSuccessAction,
+  SigninFailureAction,
+  SignoutSuccess,
+  SignoutFailure,
+  SignupStartAction,
+} from './user';
 import {
   SetDocumentStartAction,
   SetDocumentSuccessAction,
@@ -19,25 +27,41 @@ import {
 
 export enum ActionTypes {
   setCurrentUser,
-  setDocumentStart,
-  setDocumentSuccess,
-  setDocumentFailure,
-  readDocumentsStart,
-  readDocumentsSuccess,
-  readDocumentsFailure,
-  readDocumentStart,
-  readDocumentSuccess,
-  readDocumentFailure,
-  deleteDocumentStart,
-  deleteDocumentSuccess,
-  delelteDocumentFailure,
-  updateDocumentStart,
-  updateDocumentSuccess,
-  updateDocumentFailure,
+
+  // auth types
+  googleSigninStart = '@app/google-signin-start',
+  signinWithEmailStart = '@app/signin-with-email-start',
+  signinSuccess = '@app/signin-success',
+  signinFailure = '@app/signin-failure',
+  checkUserSession = '@app/check-user-session',
+
+  signupStart = '@app/signup-start',
+  signupSuccess = '@app/signup-success',
+  signupFailure = '@app/signup-failure',
+
+  signoutStart = '@app/signout-start',
+  signoutSuccess = '@app/signout-success',
+  signoutFailure = '@app/signout-failure',
+
+  // document types
+  setDocumentStart = '@app/set-document-start',
+  setDocumentSuccess = '@app/set-document-success',
+  setDocumentFailure = '@app/set-document-failure',
+  readDocumentsStart = '@app/read-documents-start',
+  readDocumentsSuccess = '@app/read-documents-success',
+  readDocumentsFailure = '@app/read-documents-failure',
+  readDocumentStart = '@app/read-document-start',
+  readDocumentSuccess = '@app/read-document-success',
+  readDocumentFailure = '@app/read-document-failure',
+  deleteDocumentStart = '@app/delete-document-start',
+  deleteDocumentSuccess = '@app/delete-document-success',
+  delelteDocumentFailure = '@app/delete-document-failure',
+  updateDocumentStart = '@app/update-document-start',
+  updateDocumentSuccess = '@app/update-document-success',
+  updateDocumentFailure = '@app/update-document-failure',
 }
 
 export type Action =
-  | SetCurrentUserAction
   | SetDocumentStartAction
   | SetDocumentSuccessAction
   | SetDocumentFailureAction
@@ -52,4 +76,11 @@ export type Action =
   | DeleteDocumentFailureAction
   | UpdateDocumentStartAction
   | UpdateDocumentSuccessAction
-  | UpdateDocumentFailureAction;
+  | UpdateDocumentFailureAction
+  | GoogleSigninStartAction
+  | SigninWithEmailStartAction
+  | SigninSuccessAction
+  | SigninFailureAction
+  | SignoutSuccess
+  | SignoutFailure
+  | SignupStartAction;

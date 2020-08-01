@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { History } from 'history';
-import { auth, createUserProfileDocument } from '../firebase/firebase.utils';
 import { Emoji } from './Emoji';
+import { signupStart } from '../actions';
+import { StoreState } from '../reducers';
 
 type Inputs = {
   firstName: string;
@@ -17,6 +19,9 @@ type Inputs = {
 
 interface SignupProps {
   history: History;
+  signupStart: Function;
+  loading: boolean;
+  signupError: string | null;
 }
 
 const errorStyle = {
@@ -28,10 +33,15 @@ const span = {
   display: 'block',
 };
 
-export const Signup = (props: SignupProps): JSX.Element => {
+const _Signup = ({
+  signupStart,
+  signupError,
+  loading,
+  history,
+}: SignupProps): JSX.Element => {
   const { register, handleSubmit, errors, watch } = useForm<Inputs>();
   const [errorMessage, setErrorMessage] = React.useState('');
-  const [disabled, setDisabled] = React.useState(false);
+
   const watchFields = watch(['password', 'confirmPassword']);
 
   const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -42,25 +52,21 @@ export const Signup = (props: SignupProps): JSX.Element => {
       setErrorMessage('Password does not match');
       return;
     }
-    try {
-      setDisabled(true);
-      const { user } = await auth.createUserWithEmailAndPassword(
-        data.emailAddress,
-        data.password
-      );
-      await createUserProfileDocument(user, {
-        displayName: `${data.firstName} ${data.lastName}`,
-      });
 
-      props.history.push('/');
-    } catch (error) {
-      setDisabled(false);
-      setErrorMessage(error.message);
-    }
+    signupStart(
+      {
+        email: data.emailAddress,
+        password: data.password,
+      },
+      history,
+      {
+        displayName: `${data.firstName} ${data.lastName}`,
+      }
+    );
   };
 
   const renderValidationErrors = () => {
-    if (!_.isEmpty(errors) || errorMessage) {
+    if (!_.isEmpty(errors) || signupError || errorMessage) {
       return (
         <div style={errorStyle}>
           <span style={span}>
@@ -74,6 +80,7 @@ export const Signup = (props: SignupProps): JSX.Element => {
           <span style={span}>
             {errors.confirmPassword && errors.confirmPassword.message}
           </span>
+          <span style={span}>{signupError && signupError}</span>
           <span style={span}>{errorMessage && errorMessage}</span>
         </div>
       );
@@ -95,7 +102,6 @@ export const Signup = (props: SignupProps): JSX.Element => {
                 className=""
                 placeholder="First Name"
                 ref={register({ required: 'First name is required' })}
-                onChange={() => setErrorMessage('')}
               />
             </div>
             <div>
@@ -106,7 +112,6 @@ export const Signup = (props: SignupProps): JSX.Element => {
                 className=""
                 placeholder="Last Name"
                 ref={register({ required: 'Last name is required' })}
-                onChange={() => setErrorMessage('')}
               />
             </div>
             <div>
@@ -123,7 +128,6 @@ export const Signup = (props: SignupProps): JSX.Element => {
                     message: 'Please provide a valid email',
                   },
                 })}
-                onChange={() => setErrorMessage('')}
               />
             </div>
             <div>
@@ -157,14 +161,14 @@ export const Signup = (props: SignupProps): JSX.Element => {
               />
             </div>
             <div className="grid-100 pad-bottom">
-              <button className="button" type="submit" disabled={disabled}>
+              <button className="button" type="submit" disabled={loading}>
                 <Emoji symbol="🚀" label="Sign Up" />
               </button>
               <button
                 type="button"
                 className="button button-secondary"
-                onClick={() => props.history.push('/')}
-                disabled={disabled}
+                onClick={() => history.push('/')}
+                disabled={loading}
               >
                 Cancel
               </button>
@@ -180,3 +184,10 @@ export const Signup = (props: SignupProps): JSX.Element => {
     </div>
   );
 };
+
+const mapStateToProps = (state: StoreState) => ({
+  loading: state.user.loading,
+  signupError: state.user.error,
+});
+
+export const Signup = connect(mapStateToProps, { signupStart })(_Signup);
