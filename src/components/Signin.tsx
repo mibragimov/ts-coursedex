@@ -1,14 +1,16 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import { History } from 'history';
-import { auth } from '../firebase/firebase.utils';
 import { useForm } from 'react-hook-form';
 import { Emoji } from './Emoji';
 import { GoogleSignin } from './GoogleSignin';
+import { signinWithEmailStart } from '../actions';
 
 interface SigninProps {
   history: History;
+  signinWithEmailStart: Function;
 }
 type Inputs = {
   emailAddress: string;
@@ -23,7 +25,7 @@ const span = {
   display: 'block',
 };
 
-export const Signin = (props: SigninProps): JSX.Element => {
+const _Signin = (props: SigninProps): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<Inputs>();
   const [disabled, setDisabled] = React.useState(false);
 
@@ -31,10 +33,13 @@ export const Signin = (props: SigninProps): JSX.Element => {
 
   const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-  const onSubmit = async (data: Inputs): Promise<void> => {
+  const onSubmit = async (data: Inputs) => {
     try {
       setDisabled(true);
-      await auth.signInWithEmailAndPassword(data.emailAddress, data.password);
+      await props.signinWithEmailStart({
+        email: data.emailAddress,
+        password: data.password,
+      });
 
       setErrorMessage('');
       props.history.push('/');
@@ -119,3 +124,5 @@ export const Signin = (props: SigninProps): JSX.Element => {
     </div>
   );
 };
+
+export const Signin = connect(null, { signinWithEmailStart })(_Signin);

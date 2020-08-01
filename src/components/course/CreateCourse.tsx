@@ -3,15 +3,15 @@ import _ from 'lodash';
 import { History } from 'history';
 import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { setDocument } from '../../actions';
-import { StoreState } from '../../reducers';
+import { setDocument, CurrentUser } from '../../actions';
+import { StoreState, selectCurrentUser } from '../../reducers';
 import { Emoji } from '../Emoji';
 
 interface CreateCourseProps {
   setDocument: Function;
   creating: boolean;
   createError: string | null;
-  currentUserName: string;
+  currentUser: CurrentUser | null;
   history: History;
 }
 
@@ -28,7 +28,7 @@ const _CreateCourse = (props: CreateCourseProps): JSX.Element => {
   const onSubmit = async (data: Inputs) => {
     await props.setDocument({
       ...data,
-      displayName: props.currentUserName,
+      displayName: props.currentUser?.displayName,
     });
 
     props.history.push('/');
@@ -74,7 +74,9 @@ const _CreateCourse = (props: CreateCourseProps): JSX.Element => {
                   placeholder="Course title..."
                 />
               </div>
-              {props.currentUserName && <p>By {props.currentUserName}</p>}
+              {props.currentUser?.displayName && (
+                <p>By {props.currentUser.displayName}</p>
+              )}
             </div>
             <div className="course--description">
               <div>
@@ -164,11 +166,11 @@ const mapStateToProps = (
 ): {
   creating: boolean;
   createError: string | null;
-  currentUserName: string;
+  currentUser: CurrentUser | null;
 } => ({
   creating: state.course.creating,
   createError: state.course.createError,
-  currentUserName: state.user.displayName,
+  currentUser: selectCurrentUser(state),
 });
 
 export const CreateCourse = connect(mapStateToProps, { setDocument })(

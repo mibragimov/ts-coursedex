@@ -6,12 +6,11 @@ import { Header } from './Header';
 import { Signin } from './Signin';
 import { Signup } from './Signup';
 import { NotFound } from './NotFound';
-import { auth, createUserProfileDocument } from '../firebase/firebase.utils';
-import { setCurrentUser, User } from '../actions';
-import { StoreState } from '../reducers';
+import { StoreState, selectCurrentUser } from '../reducers';
 import { Forbidden } from './Forbidden';
 import { Spinner } from './Spinner';
 import { ErrorBoundary } from './ErrorBoundary';
+import { checkUserSession, CurrentUser } from '../actions';
 
 // dynamic imports for code splitting with react lazy
 // TODO: refactor
@@ -33,43 +32,15 @@ const UpdateCourse = lazy(() =>
 );
 
 interface AppProps {
-  currentUser: User;
-  setCurrentUser: typeof setCurrentUser;
+  currentUser: CurrentUser | null;
   isAuthenticated: boolean;
+  checkUserSession: Function;
 }
 // TODO: convert class to functional component
 // TODO: use sagas for subscribing to auth state change
 class _App extends React.Component<AppProps> {
-  // bad way! avoid assigning 'any' type
-  // TODO: remove unsubscribe method, create actions for auth methods
-  unsubscribeFromAuth: any;
-
-  constructor(props: AppProps) {
-    super(props);
-
-    this.unsubscribeFromAuth = null;
-  }
-
-  componentDidMount(): void {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        const userRef = await createUserProfileDocument(user);
-
-        userRef?.onSnapshot((snapshot) => {
-          const data = snapshot.data();
-          this.props.setCurrentUser({
-            id: snapshot.id,
-            displayName: data?.displayName,
-            email: data?.email,
-          });
-        });
-      }
-      this.props.setCurrentUser(null);
-    });
-  }
-
-  componentWillUnmount(): void {
-    this.unsubscribeFromAuth();
+  componentDidMount() {
+    this.props.checkUserSession();
   }
 
   render() {
@@ -129,9 +100,13 @@ class _App extends React.Component<AppProps> {
 
 const mapStateToProps = (
   state: StoreState
-): { currentUser: User; isAuthenticated: boolean } => ({
-  currentUser: state.user,
-  isAuthenticated: state.user !== null,
-});
+): { isAuthenticated: boolean; currentUser: CurrentUser | null } => {
+  return {
+    isAuthenticated: state.user.currentUser !== null,
+    currentUser: selectCurrentUser(state),
+  };
+};
 
-export const App = connect(mapStateToProps, { setCurrentUser })(_App);
+export const App = connect(mapStateToProps, {
+  checkUserSession,
+})(_App);
