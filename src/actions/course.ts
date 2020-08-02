@@ -5,6 +5,7 @@ import {
   readDocumentById,
   deleteDocumentFromCollection,
   updateDocumentFromCollection,
+  firestore,
 } from '../firebase/firebase.utils';
 
 export interface Course {
@@ -38,6 +39,7 @@ export interface SetDocumentStartAction {
 }
 export interface SetDocumentSuccessAction {
   type: ActionTypes.setDocumentSuccess;
+  payload: {};
 }
 export interface SetDocumentFailureAction {
   type: ActionTypes.setDocumentFailure;
@@ -47,8 +49,9 @@ export interface SetDocumentFailureAction {
 const setDocumentStart = (): SetDocumentStartAction => ({
   type: ActionTypes.setDocumentStart,
 });
-const setDocumentSuccess = (): SetDocumentSuccessAction => ({
+const setDocumentSuccess = (data: {}): SetDocumentSuccessAction => ({
   type: ActionTypes.setDocumentSuccess,
+  payload: data,
 });
 const setDocumentFailure = (err: string): SetDocumentFailureAction => ({
   type: ActionTypes.setDocumentFailure,
@@ -56,11 +59,13 @@ const setDocumentFailure = (err: string): SetDocumentFailureAction => ({
 });
 
 export const setDocument = (data: {}) => {
+  const docRef = firestore.collection('courses').doc();
+  const id = docRef.id;
   return async (dispatch: Dispatch) => {
     try {
       dispatch(setDocumentStart());
-      await addDocumentToCollection(data);
-      dispatch(setDocumentSuccess());
+      await addDocumentToCollection(data, id);
+      dispatch(setDocumentSuccess({ ...data, id }));
     } catch (error) {
       dispatch(setDocumentFailure(error.message));
     }
@@ -163,6 +168,7 @@ export const deleteDocument = (id: string) => {
       dispatch(deleteDocumentStart());
       await deleteDocumentFromCollection(id);
       dispatch(deleteDocumentSuccess(id));
+      localStorage.removeItem('_course');
     } catch (error) {
       dispatch(deleteDocumentFailure(error.message));
     }
@@ -176,6 +182,8 @@ export interface UpdateDocumentStartAction {
 }
 export interface UpdateDocumentSuccessAction {
   type: ActionTypes.updateDocumentSuccess;
+  payload: {};
+  id: string;
 }
 export interface UpdateDocumentFailureAction {
   type: ActionTypes.updateDocumentFailure;
@@ -185,8 +193,13 @@ export interface UpdateDocumentFailureAction {
 const updateDocumentStart = (): UpdateDocumentStartAction => ({
   type: ActionTypes.updateDocumentStart,
 });
-const updateDocumentSuccess = (): UpdateDocumentSuccessAction => ({
+const updateDocumentSuccess = (
+  data: {},
+  id: string
+): UpdateDocumentSuccessAction => ({
   type: ActionTypes.updateDocumentSuccess,
+  payload: data,
+  id: id,
 });
 const updateDocumentFailure = (err: string): UpdateDocumentFailureAction => ({
   type: ActionTypes.updateDocumentFailure,
@@ -198,7 +211,7 @@ export const updateDocument = (id: string, data: {}) => {
     try {
       dispatch(updateDocumentStart());
       await updateDocumentFromCollection(id, data);
-      dispatch(updateDocumentSuccess());
+      dispatch(updateDocumentSuccess(data, id));
     } catch (error) {
       dispatch(updateDocumentFailure(error.message));
     }

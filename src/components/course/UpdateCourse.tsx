@@ -35,7 +35,7 @@ const _UpdateCourse = ({
   const { register, handleSubmit, errors } = useForm<Inputs>();
 
   const onSubmit = async (data: Inputs) => {
-    await updateDocument(match.params.id, data);
+    await updateDocument(match.params.id, { ...data, id: match.params.id });
     history.push('/');
   };
 
@@ -104,7 +104,7 @@ const _UpdateCourse = ({
                     minLength: {
                       value: 50,
                       message:
-                        'Description should be at least more than 120 characters',
+                        'Description should be at least more than 50 characters',
                     },
                   })}
                   className=""
@@ -123,14 +123,7 @@ const _UpdateCourse = ({
                       id="estimatedTime"
                       name="estimatedTime"
                       defaultValue={initialFormValues.estimatedTime}
-                      ref={register({
-                        required: 'Please provide a value for "Estimated Time"',
-                        maxLength: {
-                          value: 8,
-                          message:
-                            'Estimated time maximum character limit is 8',
-                        },
-                      })}
+                      ref={register}
                       type="text"
                       className="course--time--input"
                       placeholder="Hours"
@@ -144,7 +137,7 @@ const _UpdateCourse = ({
                       id="materialsNeeded"
                       name="materialsNeeded"
                       defaultValue={initialFormValues.materialsNeeded}
-                      ref={register({ required: true })}
+                      ref={register}
                       className=""
                       placeholder="List materials..."
                     ></textarea>

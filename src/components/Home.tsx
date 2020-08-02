@@ -15,18 +15,26 @@ interface HomeProps {
   isAuth: boolean;
 }
 
-function _Home(props: HomeProps): JSX.Element {
+function _Home({
+  readDocsStart,
+  courses,
+  loadingDocs,
+  history,
+  isAuth,
+}: HomeProps): JSX.Element {
   React.useEffect(() => {
-    props.readDocsStart();
-  }, []);
+    if (!courses.length) {
+      readDocsStart();
+    }
+  }, [readDocsStart, courses.length]);
 
   const renderCourses = (): JSX.Element[] => {
-    return props.courses.map((course) => {
+    return courses.map((course) => {
       return (
         <div
           className="grid-33"
           key={course.id}
-          onClick={() => props.history.push(`/course-detail/${course.id}`)}
+          onClick={() => history.push(`/course-detail/${course.id}`)}
         >
           <Link className="course--module course--link" to="/course-detail">
             <h4 className="course--label">Course</h4>
@@ -42,7 +50,7 @@ function _Home(props: HomeProps): JSX.Element {
       <div className="grid-33">
         <Link
           className="course--module course--add--module"
-          to={props.isAuth ? '/create-course' : '/sign-in'}
+          to={isAuth ? '/create-course' : '/sign-in'}
         >
           <h3 className="course--add--title">
             <svg
@@ -63,10 +71,10 @@ function _Home(props: HomeProps): JSX.Element {
   };
 
   const renderContent = () => {
-    if (props.loadingDocs) {
+    if (loadingDocs) {
       return (
         <div className="bounds">
-          <Spinner visible={props.loadingDocs} />
+          <Spinner visible={loadingDocs} />
         </div>
       );
     } else {

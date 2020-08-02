@@ -44,7 +44,7 @@ const _App = ({
 }: AppProps): JSX.Element => {
   React.useEffect(() => {
     checkUserSession();
-  }, []);
+  }, [checkUserSession]);
 
   let routes: JSX.Element;
 
