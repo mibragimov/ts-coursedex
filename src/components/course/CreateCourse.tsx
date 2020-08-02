@@ -43,10 +43,7 @@ const _CreateCourse = (props: CreateCourseProps): JSX.Element => {
             <ul>
               {errors.title && <li>Please provide a value for "Title"</li>}
               {errors.description && <li>{errors.description.message}</li>}
-              {errors.estimatedTime && <li>{errors.estimatedTime.message}</li>}
-              {errors.materialsNeeded && (
-                <li>Please provide a value for "Materials Needed"</li>
-              )}
+
               {props.createError ? <li>{props.createError}</li> : null}
             </ul>
           </div>
@@ -87,7 +84,7 @@ const _CreateCourse = (props: CreateCourseProps): JSX.Element => {
                     minLength: {
                       value: 50,
                       message:
-                        'Description should be at least more than 120 characters',
+                        'Description should be at least more than 50 characters',
                     },
                   })}
                   name="description"
@@ -105,14 +102,7 @@ const _CreateCourse = (props: CreateCourseProps): JSX.Element => {
                   <div>
                     <input
                       id="estimatedTime"
-                      ref={register({
-                        required: 'Please provide a value for "Estimated Time"',
-                        maxLength: {
-                          value: 8,
-                          message:
-                            'Estimated time maximum character limit is 8',
-                        },
-                      })}
+                      ref={register}
                       name="estimatedTime"
                       type="text"
                       className="course--time--input"
@@ -129,7 +119,7 @@ const _CreateCourse = (props: CreateCourseProps): JSX.Element => {
                   <div>
                     <textarea
                       id="materialsNeeded"
-                      ref={register({ required: true })}
+                      ref={register}
                       name="materialsNeeded"
                       className=""
                       placeholder="List materials..."
@@ -151,6 +141,7 @@ const _CreateCourse = (props: CreateCourseProps): JSX.Element => {
               className="button button-secondary"
               onClick={() => props.history.goBack()}
               disabled={props.creating}
+              type="button"
             >
               Cancel
             </button>

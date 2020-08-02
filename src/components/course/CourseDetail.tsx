@@ -33,13 +33,9 @@ const _CourseDetail = ({
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const currentUser = auth.currentUser;
 
-  const readDocumentCallback = React.useCallback(() => {
-    readDocument(match.params.id);
-  }, []);
-
   React.useEffect(() => {
-    readDocumentCallback();
-  }, []);
+    readDocument(match.params.id);
+  }, [match.params.id, readDocument]);
 
   /* temporary solution to keep course details on browser refresh, localstorage */
   if (course) {
@@ -58,7 +54,11 @@ const _CourseDetail = ({
           <Link className="button" to={`/update-course/${match.params.id}`}>
             Update Course
           </Link>
-          <button className="button" onClick={() => setIsModalOpen(true)}>
+          <button
+            className="button"
+            onClick={() => setIsModalOpen(true)}
+            type="button"
+          >
             Delete Course
           </button>
         </span>

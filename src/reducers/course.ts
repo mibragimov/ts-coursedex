@@ -28,6 +28,7 @@ export const courseReducer = (
       return {
         ...state,
         creating: false,
+        courses: [...state.courses, action.payload],
       };
     case ActionTypes.setDocumentFailure:
       return {
@@ -91,9 +92,18 @@ export const courseReducer = (
         updating: true,
       };
     case ActionTypes.updateDocumentSuccess:
+      const index = state.courses.findIndex(
+        (course) => course.id === action.id
+      );
+
       return {
         ...state,
         updating: false,
+        courses: [
+          ...state.courses.slice(0, index),
+          { ...action.payload },
+          ...state.courses.slice(index + 1),
+        ],
       };
     case ActionTypes.updateDocumentFailure:
       return {

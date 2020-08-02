@@ -58,12 +58,12 @@ export const createUserProfileDocument = async (
   return userRef;
 };
 
-export const addDocumentToCollection = async (data: {}) => {
-  const collectionRef = firestore.collection('courses');
+export const addDocumentToCollection = async (data: {}, id: string) => {
+  const collectionRef = firestore.collection('courses').doc(id);
   const user = firebase.auth().currentUser;
 
   try {
-    await collectionRef.doc().set({
+    await collectionRef.set({
       ...data,
       owner: user?.uid,
     });

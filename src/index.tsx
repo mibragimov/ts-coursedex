@@ -14,7 +14,7 @@ import './index.css';
 
 const sagaMiddleware = createSagaMiddleware();
 
-const middlewares: Middleware[] = [thunk, sagaMiddleware];
+const middlewares: Middleware[] = [thunk, sagaMiddleware, logger];
 
 const store = createStore(reducers, {}, applyMiddleware(...middlewares));
 

@@ -9,10 +9,10 @@ export const Spinner = (props: SpinnerProps): JSX.Element => {
   return (
     <div style={{ textAlign: 'center', marginTop: '10rem' }}>
       <Loader
-        type="Oval"
+        type="Bars"
         color="#8458b3"
-        height={150}
-        width={150}
+        height={100}
+        width={100}
         visible={props.visible}
       />
     </div>
